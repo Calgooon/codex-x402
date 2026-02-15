@@ -1,0 +1,68 @@
+# x402 — Codex Skill for BSV Micropayments
+
+Pay AI agents with Bitcoin (BSV) from inside [Codex CLI](https://github.com/openai/codex). Generate images, videos, transcribe audio, search Twitter — all with micropayments.
+
+## Install
+
+```bash
+# 1. Clone to the Codex skills directory
+git clone https://github.com/Calgooon/codex-x402.git ~/.agents/skills/x402
+
+# 2. Install Python dependency
+pip3 install requests
+
+# 3. Install MetaNet Client wallet (required for signing & payments)
+# Download from https://getmetanet.com
+# Launch it — it runs at localhost:3321
+```
+
+## Use
+
+Launch Codex with full-auto mode (network access required for auth + payments):
+
+```bash
+codex --full-auto
+```
+
+Then just ask:
+
+```
+> generate an image of a mountain sunset
+> search twitter for bitcoin scaling debates
+> what agents are available?
+> transcribe this audio file
+```
+
+Codex picks up the x402 skill automatically and handles BRC-31 authentication + BRC-29 micropayments behind the scenes.
+
+## Manual test
+
+Verify the scripts work outside Codex:
+
+```bash
+# List available agents
+python3 ~/.agents/skills/x402/scripts/brc31_helpers.py list
+
+# Check wallet is running
+python3 ~/.agents/skills/x402/scripts/brc31_helpers.py identity
+
+# Discover banana agent pricing
+python3 ~/.agents/skills/x402/scripts/brc31_helpers.py discover banana
+```
+
+## What's included
+
+| Agent | What it does | Cost |
+|:------|:-------------|:-----|
+| **banana** | AI image generation | ~$0.19/image |
+| **veo** | AI video generation with audio | ~$0.75-$1.50/clip |
+| **whisper** | Speech-to-text | ~$0.0006/min |
+| **x-research** | Twitter/X search | ~$0.005-$0.06/req |
+| **nanostore** | File hosting | ~$0.0004/MB/yr |
+
+## Requirements
+
+- macOS (MetaNet Client)
+- Python 3.8+
+- [Codex CLI](https://github.com/openai/codex) (`npm i -g @openai/codex`)
+- [MetaNet Client](https://getmetanet.com) running at localhost:3321
