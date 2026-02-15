@@ -1,0 +1,7 @@
+interface:
+  display_name: "x402"
+  short_description: "BSV micropayments — auth + pay AI services with Bitcoin SV"
+  brand_color: "#F7931A"
+
+policy:
+  allow_implicit_invocation: true
