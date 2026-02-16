@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""BRC-31/BRC-29 CLI helpers for use in Claude /x402 skill.
+"""BRC-31/BRC-29 CLI helpers for use in the Codex x402 skill.
 
 Usage:
   brc31_helpers.py list                            List agents from 402agints.com registry

@@ -6,7 +6,12 @@ Pay AI agents with Bitcoin (BSV) from inside [Codex CLI](https://github.com/open
 
 ```bash
 # 1. Clone to the user-level skills directory
+mkdir -p ~/.agents/skills
 git clone https://github.com/Calgooon/codex-x402.git ~/.agents/skills/x402
+
+# If your setup uses CODEX_HOME, clone there instead:
+# mkdir -p "${CODEX_HOME:-$HOME/.codex}/skills"
+# git clone https://github.com/Calgooon/codex-x402.git "${CODEX_HOME:-$HOME/.codex}/skills/x402"
 
 # 2. Install Python dependency
 pip3 install requests
@@ -16,7 +21,7 @@ pip3 install requests
 # Launch it — it runs at localhost:3321
 ```
 
-> **How Codex finds skills:** Codex auto-discovers any directory containing a `SKILL.md` under `~/.agents/skills/`. You can also put skills in `.agents/skills/` inside any git repo for project-scoped use. See [Codex Skills docs](https://developers.openai.com/codex/skills).
+> **How Codex finds skills:** Codex auto-discovers any directory containing a `SKILL.md` under `~/.agents/skills/`. Some environments use `$CODEX_HOME/skills/` instead, so clone there if your setup is configured that way. You can also put skills in `.agents/skills/` inside any git repo for project-scoped use. See [Codex Skills docs](https://developers.openai.com/codex/skills).
 
 ## Use
 
@@ -42,14 +47,19 @@ Codex picks up the x402 skill automatically and handles BRC-31 authentication + 
 Verify the scripts work outside Codex:
 
 ```bash
+HELPER="$HOME/.agents/skills/x402/scripts/brc31_helpers.py"
+if [ ! -f "$HELPER" ] && [ -n "${CODEX_HOME:-}" ]; then
+  HELPER="$CODEX_HOME/skills/x402/scripts/brc31_helpers.py"
+fi
+
 # List available agents
-python3 ~/.agents/skills/x402/scripts/brc31_helpers.py list
+python3 "$HELPER" list
 
 # Check wallet is running
-python3 ~/.agents/skills/x402/scripts/brc31_helpers.py identity
+python3 "$HELPER" identity
 
 # Discover banana agent pricing
-python3 ~/.agents/skills/x402/scripts/brc31_helpers.py discover banana
+python3 "$HELPER" discover banana
 ```
 
 ## What's included

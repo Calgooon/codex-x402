@@ -35,8 +35,16 @@ authenticate with BRC-31, pay with BRC-29 micropayments — all from natural lan
 
 ## Instructions
 
-The helper script is at `~/.agents/skills/x402/scripts/brc31_helpers.py`.
-All commands below use this path. If the skill is installed elsewhere, adjust accordingly.
+Resolve the helper script path first:
+
+```bash
+HELPER="$HOME/.agents/skills/x402/scripts/brc31_helpers.py"
+if [ ! -f "$HELPER" ] && [ -n "${CODEX_HOME:-}" ]; then
+  HELPER="$CODEX_HOME/skills/x402/scripts/brc31_helpers.py"
+fi
+```
+
+If `HELPER` still does not exist, ask the user where `x402` is installed and use that path.
 
 ### Step 1: Determine what the user wants
 
@@ -53,28 +61,28 @@ If the request is ambiguous, ask the user to clarify which agent or action they 
 
 #### List all agents
 ```bash
-python3 ~/.agents/skills/x402/scripts/brc31_helpers.py list
+python3 "$HELPER" list
 ```
 
 #### Discover an agent's capabilities and pricing
 ```bash
-python3 ~/.agents/skills/x402/scripts/brc31_helpers.py discover <agent-name>
+python3 "$HELPER" discover <agent-name>
 ```
 Agent names: `banana`, `veo`, `whisper`, `x-research`, `nanostore`.
 
 #### Get wallet identity
 ```bash
-python3 ~/.agents/skills/x402/scripts/brc31_helpers.py identity
+python3 "$HELPER" identity
 ```
 
 #### Authenticated request (no payment)
 ```bash
-python3 ~/.agents/skills/x402/scripts/brc31_helpers.py auth <METHOD> <agent/path> [body-json]
+python3 "$HELPER" auth <METHOD> <agent/path> [body-json]
 ```
 
 #### Paid request (auth + automatic 402 payment)
 ```bash
-python3 ~/.agents/skills/x402/scripts/brc31_helpers.py pay <METHOD> <agent/path> [body-json]
+python3 "$HELPER" pay <METHOD> <agent/path> [body-json]
 ```
 This handles the full flow automatically:
 1. Sends initial request -> server returns 402 with price
@@ -97,16 +105,16 @@ via the 402agints.com registry. Full URLs (`https://...`) also work.
 **Examples:**
 ```bash
 # Generate an image
-python3 ~/.agents/skills/x402/scripts/brc31_helpers.py pay POST banana/generate '{"prompt":"a mountain sunset","aspect_ratio":"16:9"}'
+python3 "$HELPER" pay POST banana/generate '{"prompt":"a mountain sunset","aspect_ratio":"16:9"}'
 
 # Search Twitter
-python3 ~/.agents/skills/x402/scripts/brc31_helpers.py pay POST x-research/search '{"query":"bitcoin scaling","max_results":20}'
+python3 "$HELPER" pay POST x-research/search '{"query":"bitcoin scaling","max_results":20}'
 
 # Transcribe audio (base64-encoded)
-python3 ~/.agents/skills/x402/scripts/brc31_helpers.py pay POST whisper/transcribe '{"audio":"<base64>","language":"en"}'
+python3 "$HELPER" pay POST whisper/transcribe '{"audio":"<base64>","language":"en"}'
 
 # Free authenticated endpoint
-python3 ~/.agents/skills/x402/scripts/brc31_helpers.py auth POST banana/free
+python3 "$HELPER" auth POST banana/free
 ```
 
 ### Step 4: Present the result
@@ -122,7 +130,7 @@ python3 ~/.agents/skills/x402/scripts/brc31_helpers.py auth POST banana/free
 - **MetaNet Client not running:** Tell the user to start MetaNet Client from `/Applications` or download from getmetanet.com
 - **402 Payment Required with no auto-payment:** The script handles this automatically; if it fails, show the payment details from the 402 headers
 - **Agent not found:** Run `list` to show available agents
-- **Auth failure (401/403):** Run `python3 ~/.agents/skills/x402/scripts/brc31_helpers.py session --clear-all` then retry
+- **Auth failure (401/403):** Run `python3 "${HELPER%/scripts/brc31_helpers.py}/cli.py" session --clear-all` then retry
 - **requests not installed:** Run `pip3 install requests`
 
 ---

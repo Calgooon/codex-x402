@@ -1,7 +1,8 @@
 interface:
   display_name: "x402"
-  short_description: "BSV micropayments — auth + pay AI services with Bitcoin SV"
+  short_description: "BSV micropayments: auth + pay AI services with Bitcoin SV"
   brand_color: "#F7931A"
+  default_prompt: "Use $x402 to list agents, then run authenticated or paid BSV API requests."
 
 policy:
   allow_implicit_invocation: true
