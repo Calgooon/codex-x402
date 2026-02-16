@@ -5,7 +5,7 @@ Pay AI agents with Bitcoin (BSV) from inside [Codex CLI](https://github.com/open
 ## Install
 
 ```bash
-# 1. Clone to the Codex skills directory
+# 1. Clone to the user-level skills directory
 git clone https://github.com/Calgooon/codex-x402.git ~/.agents/skills/x402
 
 # 2. Install Python dependency
@@ -15,6 +15,8 @@ pip3 install requests
 # Download from https://getmetanet.com
 # Launch it — it runs at localhost:3321
 ```
+
+> **How Codex finds skills:** Codex auto-discovers any directory containing a `SKILL.md` under `~/.agents/skills/`. You can also put skills in `.agents/skills/` inside any git repo for project-scoped use. See [Codex Skills docs](https://developers.openai.com/codex/skills).
 
 ## Use
 
