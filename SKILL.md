@@ -100,7 +100,7 @@ When the user gives a natural-language request like "generate an image of a suns
 4. Run `pay POST <agent>/<endpoint> '<json-body>'`
 
 **Agent name resolution:** Short names like `banana` or `nanostore` resolve automatically
-via the 402agints.com registry. Full URLs (`https://...`) also work.
+via the x402agency.com registry. Full URLs (`https://...`) also work.
 
 **Examples:**
 ```bash

@@ -75,7 +75,7 @@ The client auto-internalizes refunds via MetaNet Client's `internalizeAction`.
 
 ## Agent Registry
 
-URL: `https://402agints.com/.well-known/agents`
+URL: `https://x402agency.com/.well-known/agents`
 
 Returns JSON with an `agents` array. Each agent has:
 - `name`: short name for resolution (e.g., `banana`)
