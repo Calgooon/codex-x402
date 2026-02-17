@@ -29,6 +29,7 @@ authenticate with BRC-31, pay with BRC-29 micropayments — all from natural lan
 | **veo** | AI video generation with audio (Google Veo 3.1 Fast) | ~$0.75-$1.50/clip |
 | **whisper** | Speech-to-text transcription (Whisper Large v3 Turbo) | ~$0.0006/min |
 | **x-research** | Twitter/X search, profiles, threads, trending | ~$0.005-$0.06/req |
+| **1sat** | 1Sat Ordinals inscriptions (any file type) | 200–256,000 sats |
 | **nanostore** | File hosting with UHRP content addressing | ~$0.0004/MB/yr |
 
 ---
@@ -68,7 +69,7 @@ python3 "$HELPER" list
 ```bash
 python3 "$HELPER" discover <agent-name>
 ```
-Agent names: `banana`, `veo`, `whisper`, `x-research`, `nanostore`.
+Agent names: `banana`, `veo`, `whisper`, `x-research`, `kling`, `1sat`, `nanostore`.
 
 #### Get wallet identity
 ```bash
@@ -89,6 +90,7 @@ This handles the full flow automatically:
 2. Creates payment transaction via MetaNet Client wallet
 3. Retries with payment header -> server accepts, returns result
 4. If response includes a refund, auto-processes it back to the wallet
+5. If response includes an `action` template (e.g. 1sat-agent), auto-executes it via wallet's `createAction` and returns the txid
 
 ### Step 3: Construct the request
 
@@ -115,6 +117,9 @@ python3 "$HELPER" pay POST whisper/transcribe '{"audio":"<base64>","language":"e
 
 # Free authenticated endpoint
 python3 "$HELPER" auth POST banana/free
+
+# Inscribe a 1Sat Ordinal (auto-broadcasts via wallet)
+python3 "$HELPER" pay POST 1sat/inscribe '{"data":"aGVsbG8=","contentType":"text/plain","publicKey":"02..."}'
 ```
 
 ### Step 4: Present the result
