@@ -60,6 +60,9 @@ python3 "$HELPER" identity
 
 # Discover banana agent pricing
 python3 "$HELPER" discover banana
+
+# Check installed helper version
+python3 "$HELPER" --version
 ```
 
 ## What's included

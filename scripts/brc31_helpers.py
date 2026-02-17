@@ -2,6 +2,7 @@
 """BRC-31/BRC-29 CLI helpers for use in the Codex x402 skill.
 
 Usage:
+  brc31_helpers.py --version                       Print helper version
   brc31_helpers.py list                            List agents from x402agency.com registry
   brc31_helpers.py identity                        Get wallet identity key
   brc31_helpers.py discover <name_or_url>          Fetch /.well-known/x402-info manifest
@@ -25,6 +26,17 @@ from lib.payment import paid_request
 from lib.session import load_session
 from lib.metanet import get_identity_key
 from lib import registry
+
+
+def get_version():
+    """Read VERSION from project root."""
+    root_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    version_file = os.path.join(root_dir, "VERSION")
+    try:
+        with open(version_file, "r", encoding="utf-8") as f:
+            return f.read().strip()
+    except Exception:
+        return "unknown"
 
 
 def discover(manifest_url):
@@ -58,7 +70,10 @@ def main():
 
     cmd = sys.argv[1]
 
-    if cmd == "list":
+    if cmd in ("version", "--version", "-v"):
+        print(get_version())
+
+    elif cmd == "list":
         agents = registry.list_agents()
         print(json.dumps(agents, indent=2))
 

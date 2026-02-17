@@ -90,7 +90,13 @@ This handles the full flow automatically:
 2. Creates payment transaction via MetaNet Client wallet
 3. Retries with payment header -> server accepts, returns result
 4. If response includes a refund, auto-processes it back to the wallet
-5. If response includes an `action` template (e.g. 1sat-agent), auto-executes it via wallet's `createAction` and returns the txid
+5. If response includes an `action` template (e.g. 1sat-agent), returns `pending_action` for explicit execution
+
+#### Execute a pending wallet action (broadcast)
+```bash
+python3 "$HELPER" execute-action '<action-json>'
+```
+Use this after `pay` when the response includes `pending_action.action`.
 
 ### Step 3: Construct the request
 
@@ -118,8 +124,9 @@ python3 "$HELPER" pay POST whisper/transcribe '{"audio":"<base64>","language":"e
 # Free authenticated endpoint
 python3 "$HELPER" auth POST banana/free
 
-# Inscribe a 1Sat Ordinal (auto-broadcasts via wallet)
-python3 "$HELPER" pay POST 1sat/inscribe '{"data":"aGVsbG8=","contentType":"text/plain","publicKey":"02..."}'
+# Inscribe a 1Sat Ordinal (requires explicit action execution)
+PAY_JSON=$(python3 "$HELPER" pay POST 1sat/inscribe '{"data":"aGVsbG8=","contentType":"text/plain","publicKey":"02..."}')
+python3 "$HELPER" execute-action "$(echo "$PAY_JSON" | jq -c '.pending_action.action')"
 ```
 
 ### Step 4: Present the result
@@ -129,6 +136,7 @@ python3 "$HELPER" pay POST 1sat/inscribe '{"data":"aGVsbG8=","contentType":"text
 - For text results (transcription, search): format and display clearly
 - For errors: show the error message and suggest fixes
 - If a refund was processed, mention it to the user
+- If `pending_action` is present, execute it and return `txid` / `inscription_id`
 
 ### Error handling
 

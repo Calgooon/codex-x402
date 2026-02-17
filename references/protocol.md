@@ -44,7 +44,7 @@ After handshake, every request includes these headers:
 2. Server responds 402 with payment headers:
    - `x-bsv-payment-satoshis-required`: amount in satoshis
    - `x-bsv-payment-derivation-prefix`: prefix for key derivation
-   - `x-bsv-payment-version`: `"0.1"`
+   - `x-bsv-payment-version`: `"1.0"`
 3. Client creates a payment transaction via MetaNet Client wallet:
    - Protocol ID: `[2, "3241645161d8"]`
    - derivationSuffix: base64-encoded random bytes
