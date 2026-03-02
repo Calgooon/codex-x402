@@ -77,10 +77,16 @@ class PaymentRequired:
         satoshis: int,
         derivation_prefix: str,
         version: str = PAYMENT_VERSION,
+        transports: list | None = None,
     ):
         self.satoshis = satoshis
         self.derivation_prefix = derivation_prefix
         self.version = version
+        self.transports = transports or []
+
+    def supports_multipart(self) -> bool:
+        """Whether the server advertises multipart transport support (BRC-105)."""
+        return "multipart" in self.transports
 
     def __repr__(self) -> str:
         return (
@@ -149,10 +155,14 @@ def parse_402_response(response: requests.Response) -> PaymentRequired:
             "402 response is missing x-bsv-payment-derivation-prefix header."
         )
 
+    transports_raw = response.headers.get("x-bsv-payment-transports", "")
+    transports = [t.strip() for t in transports_raw.split(",") if t.strip()] if transports_raw else []
+
     payment_req = PaymentRequired(
         satoshis=satoshis,
         derivation_prefix=derivation_prefix,
         version=version,
+        transports=transports,
     )
     log.debug("Parsed 402: %s", payment_req)
     return payment_req
@@ -635,7 +645,7 @@ def paid_request(
         # without an original body.
         retry_headers = dict(original_headers)
 
-        if len(payment_json) > MULTIPART_THRESHOLD:
+        if len(payment_json) > MULTIPART_THRESHOLD and payment_req.supports_multipart():
             # BRC-105 multipart transport
             log.info(
                 "Payment JSON %d bytes > %d threshold, using multipart transport",
